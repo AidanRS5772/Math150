@@ -67,7 +67,7 @@ function r_2_change_trials(x,y, N)
     return high/N , low/N
 end
 
-high_p , low_p = r_2_change_trials(x,y,1_000_000)
+high_r , low_r = r_2_change_trials(x,y,1_000_000)
 
-println(high_p)
-println(low_p)
+println("higher: ", high_r)
+println("lower: ", low_p)

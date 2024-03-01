@@ -2,6 +2,7 @@ using CSV
 using DataFrames
 using PlotlyJS
 using LinearAlgebra
+using Statistics
 
 df = CSV.read("assessment_data.csv", DataFrame, header=false)
 
@@ -58,8 +59,9 @@ r_2 = regress_r2(x, y, f)
 println("r^2: $(r_2)")
 
 res = find_res(vx,vy,f)
-display(res)
+println("avg res: ", mean(res))
+println("avg res^2: ", mean(res.^2))
 p1 = plot([ds, fs], Layout(title = "A & B"))
-hist = plot(histogram(;x=res, autobinx=true), Layout(title = "A & B"))
+hist = plot(histogram(x=res, autobinx=true), Layout(title = "A & B"))
 
 [p1 hist]

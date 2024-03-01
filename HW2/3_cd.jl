@@ -63,8 +63,9 @@ r_2 = regress_r2(x, y, f)
 println("r^2: $(r_2)")
 
 res = find_res(vx,vy,f)
-println(res)
+println("res: ", mean(res))
+println("avg res^2: ", mean(res.^2))
 p1 = plot([ds, fs], Layout(title = "C & D"))
-hist = plot(histogram(;x=res, autobinx=true), Layout(title = "C & D"))
+hist = plot(histogram(x=res, autobinx=false, xbins_start=-0.5, xbins_end=0.5, xbins_size=.1), Layout(title = "C & D"))
 
 [p1 hist]
