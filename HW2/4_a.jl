@@ -1,20 +1,12 @@
+using Random
 using CSV
 using DataFrames
 using PlotlyJS
-using LinearAlgebra
 
-df = CSV.read("assessment_data.csv", DataFrame, header=false)
+df = CSV.read("random_data_p4.csv", DataFrame, header=false)
 
-Allx = df.Column1
-Ally = df.Column2
-
-indecies = sortperm(Allx)
-
-Allx = Allx[indecies]
-Ally = Ally[indecies]
-
-x, vx = Allx[11:90] , [Allx[1:10] ; Allx[91:100]]
-y, vy = Ally[11:90] , [Ally[1:10] ; Ally[91:100]]
+x = df.Column1
+y = df.Column2
 
 function make_A(order, x)
     out = ones(length(x))
@@ -49,11 +41,7 @@ function regress_r2(x::Vector,y::Vector,f::Function)
     return 1-ssr/sst
 end
 
-function find_res(vx,vy,f)
-    return vy.-f.(vx)
-end
-
-f(t) = poly_regress(vals, t)
+f(t) = poly_regress(vals, t);
 
 T = LinRange(minimum(x), maximum(x), 100)
 ds = scatter(x = x, y = y, mode = "markers")
@@ -62,9 +50,4 @@ fs = scatter(x = T, y = f.(T), mode = "line")
 r_2 = regress_r2(x, y, f)
 println("r^2: $(r_2)")
 
-res = find_res(vx,vy,f)
-println(res)
-p1 = plot([ds, fs], Layout(title = "C & D"))
-hist = plot(histogram(;x=res, autobinx=true), Layout(title = "C & D"))
-
-[p1 hist]
+plot([ds, fs])

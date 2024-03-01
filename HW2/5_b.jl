@@ -2,19 +2,10 @@ using CSV
 using DataFrames
 using PlotlyJS
 using LinearAlgebra
+using Statistics
 
-df = CSV.read("assessment_data.csv", DataFrame, header=false)
-
-Allx = df.Column1
-Ally = df.Column2
-
-indecies = sortperm(Allx)
-
-Allx = Allx[indecies]
-Ally = Ally[indecies]
-
-x, vx = Allx[11:90] , [Allx[1:10] ; Allx[91:100]]
-y, vy = Ally[11:90] , [Ally[1:10] ; Ally[91:100]]
+x = collect(0:5)
+y = [5.1, 4.2, 2.8, 2.2, 0.9, 0.3]
 
 function make_A(order, x)
     out = ones(length(x))
@@ -24,13 +15,6 @@ function make_A(order, x)
 
     return out
 end
-
-A = make_A(1, x)
-
-
-vals = (A' * A) \ (A' * y)
-
-display(vals)
 
 function poly_regress(vals, t)
 	tot = 0
@@ -49,11 +33,24 @@ function regress_r2(x::Vector,y::Vector,f::Function)
     return 1-ssr/sst
 end
 
-function find_res(vx,vy,f)
-    return vy.-f.(vx)
+function corelation(x,y)
+    avg_xy = mean(x.*y)
+    avg_x = mean(x)
+    avg_y = mean(y)
+    avg_x2 = mean(x.^2)
+    avg_y2 = mean(y.^2)
+
+    return (avg_xy - avg_x*avg_y)/(sqrt(avg_x2-avg_x^2)*sqrt(avg_y2-avg_y^2))
 end
 
-f(t) = poly_regress(vals, t)
+A = make_A(1, x)
+
+
+vals = (A' * A) \ (A' * y)
+
+display(vals)
+
+f(t) = poly_regress(vals, t);
 
 T = LinRange(minimum(x), maximum(x), 100)
 ds = scatter(x = x, y = y, mode = "markers")
@@ -62,9 +59,7 @@ fs = scatter(x = T, y = f.(T), mode = "line")
 r_2 = regress_r2(x, y, f)
 println("r^2: $(r_2)")
 
-res = find_res(vx,vy,f)
-println(res)
-p1 = plot([ds, fs], Layout(title = "C & D"))
-hist = plot(histogram(;x=res, autobinx=true), Layout(title = "C & D"))
+cor = corelation(x,y)
+println("correlation: $(cor)")
 
-[p1 hist]
+plot([ds, fs])

@@ -4,7 +4,7 @@ using PlotlyJS
 using LinearAlgebra
 using Random
 
-df = CSV.read("assessment_data.csv", DataFrame, header=false)
+df = CSV.read("random_data_p4.csv", DataFrame, header=false)
 
 x = df.Column1
 y = df.Column2
@@ -71,4 +71,3 @@ high_p , low_p = r_2_change_trials(x,y,1_000_000)
 
 println(high_p)
 println(low_p)
-
